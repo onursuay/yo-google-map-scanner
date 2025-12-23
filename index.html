@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Google Maps Scanner Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0d59f2",
+              "background-light": "#f5f6f8",
+              "background-dark": "#0f172a", // Updated to match user request #0f172a
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+            backgroundImage: {
+                'glass-gradient': 'linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 3px;
+        }
+        
+        /* Hide default select arrow */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        
+        .glass-card {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-white font-display antialiased min-h-screen relative overflow-x-hidden selection:bg-primary selection:text-white">
+<!-- Decorative Background Blurs -->
+<div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+<div class="relative z-10 flex flex-col min-h-screen w-full max-w-md mx-auto pb-6">
+<!-- Header -->
+<header class="pt-8 pb-4 px-6 flex flex-col items-center justify-center text-center">
+<h1 class="text-[32px] font-extrabold tracking-tight leading-tight mb-1 flex items-center gap-3">
+<span class="text-3xl">🔍</span> Scanner
+            </h1>
+<p class="text-slate-400 text-sm font-medium tracking-wide">Google Maps İşletme Tarama</p>
+</header>
+<!-- Main Form Card (Glassmorphism) -->
+<main class="px-4 w-full">
+<div class="glass-card bg-glass-gradient border border-white/10 rounded-2xl p-6 mb-8 relative overflow-hidden group">
+<!-- Subtle inner glow -->
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+<form class="flex flex-col gap-5 relative z-10" onsubmit="event.preventDefault();">
+<!-- City Selection -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-300 ml-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
+                            Şehir Seçiniz
+                        </label>
+<div class="relative">
+<select class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all cursor-pointer hover:bg-slate-800/60">
+<option disabled="" selected="" value="">Bir şehir seçin...</option>
+<option value="34">İstanbul</option>
+<option value="06">Ankara</option>
+<option value="35">İzmir</option>
+<option value="07">Antalya</option>
+<option value="16">Bursa</option>
+<!-- Other 76 cities would go here -->
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Sector / Keyword -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-300 ml-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">search</span>
+                            Sektör / Anahtar Kelime
+                        </label>
+<input class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="Örn: restoran, kafe, otel..." type="text"/>
+</div>
+<!-- Limit Selection -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-300 ml-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">tune</span>
+                            Limit
+                        </label>
+<div class="grid grid-cols-4 gap-2">
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="limit" type="radio" value="10"/>
+<div class="h-12 rounded-xl border border-slate-700/50 bg-slate-900/60 flex items-center justify-center text-sm font-medium text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all shadow-sm">
+                                    10
+                                </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="limit" type="radio" value="20"/>
+<div class="h-12 rounded-xl border border-slate-700/50 bg-slate-900/60 flex items-center justify-center text-sm font-medium text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all shadow-sm">
+                                    20
+                                </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="limit" type="radio" value="30"/>
+<div class="h-12 rounded-xl border border-slate-700/50 bg-slate-900/60 flex items-center justify-center text-sm font-medium text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all shadow-sm">
+                                    30
+                                </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="limit" type="radio" value="50"/>
+<div class="h-12 rounded-xl border border-slate-700/50 bg-slate-900/60 flex items-center justify-center text-sm font-medium text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all shadow-sm">
+                                    50
+                                </div>
+</label>
+</div>
+</div>
+<!-- Start Button -->
+<button class="mt-4 w-full h-14 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 active:scale-[0.98] text-white font-bold text-base tracking-wide shadow-lg shadow-primary/25 flex items-center justify-center gap-2 transition-all group">
+<span class="material-symbols-outlined group-hover:animate-pulse">rocket_launch</span>
+                        BAŞLAT
+                    </button>
+</form>
+</div>
+</main>
+<!-- History Section -->
+<section class="px-6 pb-20 w-full">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold text-white tracking-tight">Son taramalar listesi</h2>
+<button class="text-xs font-medium text-primary hover:text-blue-400 transition-colors">Tümünü sil</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- History Item 1 -->
+<div class="bg-slate-800/40 border border-slate-700/30 rounded-xl p-4 flex items-center gap-4 hover:bg-slate-800/60 transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center shrink-0 text-blue-400">
+<span class="material-symbols-outlined text-[20px]">restaurant</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-white font-semibold text-sm truncate">İtalyan Restoranı</h3>
+<p class="text-slate-400 text-xs flex items-center gap-1 mt-0.5">
+<span>İstanbul</span>
+<span class="w-1 h-1 rounded-full bg-slate-600"></span>
+<span>Bugün, 14:30</span>
+</p>
+</div>
+<div class="shrink-0 text-slate-500">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</div>
+</div>
+<!-- History Item 2 -->
+<div class="bg-slate-800/40 border border-slate-700/30 rounded-xl p-4 flex items-center gap-4 hover:bg-slate-800/60 transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-purple-500/10 flex items-center justify-center shrink-0 text-purple-400">
+<span class="material-symbols-outlined text-[20px]">coffee</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-white font-semibold text-sm truncate">3. Nesil Kahve</h3>
+<p class="text-slate-400 text-xs flex items-center gap-1 mt-0.5">
+<span>İzmir</span>
+<span class="w-1 h-1 rounded-full bg-slate-600"></span>
+<span>Dün, 09:15</span>
+</p>
+</div>
+<div class="shrink-0 text-slate-500">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</div>
+</div>
+<!-- History Item 3 -->
+<div class="bg-slate-800/40 border border-slate-700/30 rounded-xl p-4 flex items-center gap-4 hover:bg-slate-800/60 transition-colors cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center shrink-0 text-emerald-400">
+<span class="material-symbols-outlined text-[20px]">hotel</span>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="text-white font-semibold text-sm truncate">Butik Otel</h3>
+<p class="text-slate-400 text-xs flex items-center gap-1 mt-0.5">
+<span>Antalya</span>
+<span class="w-1 h-1 rounded-full bg-slate-600"></span>
+<span>21 Eki, 18:45</span>
+</p>
+</div>
+<div class="shrink-0 text-slate-500">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Example Toast Notification (Hidden by default in logic, visible here for design) -->
+<!-- 
+        <div class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-emerald-500/90 backdrop-blur text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 z-50 animate-bounce">
+            <span class="material-symbols-outlined">check_circle</span>
+            <p class="text-sm font-medium">Tarama başarıyla tamamlandı!</p>
+        </div>
+        -->
+</div>
+</body></html>
