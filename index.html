@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Google Maps Scanner Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0d59f2",
+              "background-light": "#f5f6f8",
+              "background-dark": "#0f172a", // Updated to match user request #0f172a
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+            backgroundImage: {
+                'glass-gradient': 'linear-gradient(145deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom scrollbar for clean look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 3px;
+        }
+        
+        /* Hide default select arrow */
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        
+        .glass-card {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark text-white font-display antialiased min-h-screen relative overflow-x-hidden selection:bg-primary selection:text-white">
+<!-- Decorative Background Blurs -->
+<div class="fixed top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary/20 rounded-full blur-[100px] pointer-events-none z-0"></div>
+<div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none z-0"></div>
+<div class="relative z-10 flex flex-col min-h-screen w-full max-w-md mx-auto pb-6">
+<!-- Header -->
+<header class="pt-8 pb-4 px-6 flex flex-col items-center justify-center text-center">
+<h1 class="text-[32px] font-extrabold tracking-tight leading-tight mb-1 flex items-center gap-3">
+<span class="text-3xl">🔍</span> Scanner
+            </h1>
+<p class="text-slate-400 text-sm font-medium tracking-wide">Google Maps İşletme Tarama</p>
+</header>
+<!-- Main Form Card (Glassmorphism) -->
+<main class="px-4 w-full">
+<div class="glass-card bg-glass-gradient border border-white/10 rounded-2xl p-6 mb-8 relative overflow-hidden group">
+<!-- Subtle inner glow -->
+<div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
+<form class="flex flex-col gap-5 relative z-10" onsubmit="event.preventDefault();">
+<!-- City Selection -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-300 ml-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
+                            Şehir Seçiniz
+                        </label>
+<div class="relative">
+                            <select id="citySelect" class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 pr-12 text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all cursor-pointer hover:bg-slate-800/60">
+<option disabled="" selected="" value="">Bir şehir seçin...</option>
+                                <option value="Adana">Adana</option>
+                                <option value="Adıyaman">Adıyaman</option>
+                                <option value="Afyonkarahisar">Afyonkarahisar</option>
+                                <option value="Ağrı">Ağrı</option>
+                                <option value="Aksaray">Aksaray</option>
+                                <option value="Amasya">Amasya</option>
+                                <option value="Ankara">Ankara</option>
+                                <option value="Antalya">Antalya</option>
+                                <option value="Ardahan">Ardahan</option>
+                                <option value="Artvin">Artvin</option>
+                                <option value="Aydın">Aydın</option>
+                                <option value="Balıkesir">Balıkesir</option>
+                                <option value="Bartın">Bartın</option>
+                                <option value="Batman">Batman</option>
+                                <option value="Bayburt">Bayburt</option>
+                                <option value="Bilecik">Bilecik</option>
+                                <option value="Bingöl">Bingöl</option>
+                                <option value="Bitlis">Bitlis</option>
+                                <option value="Bolu">Bolu</option>
+                                <option value="Burdur">Burdur</option>
+                                <option value="Bursa">Bursa</option>
+                                <option value="Çanakkale">Çanakkale</option>
+                                <option value="Çankırı">Çankırı</option>
+                                <option value="Çorum">Çorum</option>
+                                <option value="Denizli">Denizli</option>
+                                <option value="Diyarbakır">Diyarbakır</option>
+                                <option value="Düzce">Düzce</option>
+                                <option value="Edirne">Edirne</option>
+                                <option value="Elazığ">Elazığ</option>
+                                <option value="Erzincan">Erzincan</option>
+                                <option value="Erzurum">Erzurum</option>
+                                <option value="Eskişehir">Eskişehir</option>
+                                <option value="Gaziantep">Gaziantep</option>
+                                <option value="Giresun">Giresun</option>
+                                <option value="Gümüşhane">Gümüşhane</option>
+                                <option value="Hakkari">Hakkari</option>
+                                <option value="Hatay">Hatay</option>
+                                <option value="Iğdır">Iğdır</option>
+                                <option value="Isparta">Isparta</option>
+                                <option value="İstanbul">İstanbul</option>
+                                <option value="İzmir">İzmir</option>
+                                <option value="Kahramanmaraş">Kahramanmaraş</option>
+                                <option value="Karabük">Karabük</option>
+                                <option value="Karaman">Karaman</option>
+                                <option value="Kars">Kars</option>
+                                <option value="Kastamonu">Kastamonu</option>
+                                <option value="Kayseri">Kayseri</option>
+                                <option value="Kırıkkale">Kırıkkale</option>
+                                <option value="Kırklareli">Kırklareli</option>
+                                <option value="Kırşehir">Kırşehir</option>
+                                <option value="Kilis">Kilis</option>
+                                <option value="Kocaeli">Kocaeli</option>
+                                <option value="Konya">Konya</option>
+                                <option value="Kütahya">Kütahya</option>
+                                <option value="Malatya">Malatya</option>
+                                <option value="Manisa">Manisa</option>
+                                <option value="Mardin">Mardin</option>
+                                <option value="Mersin">Mersin</option>
+                                <option value="Muğla">Muğla</option>
+                                <option value="Muş">Muş</option>
+                                <option value="Nevşehir">Nevşehir</option>
+                                <option value="Niğde">Niğde</option>
+                                <option value="Ordu">Ordu</option>
+                                <option value="Osmaniye">Osmaniye</option>
+                                <option value="Rize">Rize</option>
+                                <option value="Sakarya">Sakarya</option>
+                                <option value="Samsun">Samsun</option>
+                                <option value="Şanlıurfa">Şanlıurfa</option>
+                                <option value="Siirt">Siirt</option>
+                                <option value="Sinop">Sinop</option>
+                                <option value="Şırnak">Şırnak</option>
+                                <option value="Sivas">Sivas</option>
+                                <option value="Tekirdağ">Tekirdağ</option>
+                                <option value="Tokat">Tokat</option>
+                                <option value="Trabzon">Trabzon</option>
+                                <option value="Tunceli">Tunceli</option>
+                                <option value="Uşak">Uşak</option>
+                                <option value="Van">Van</option>
+                                <option value="Yalova">Yalova</option>
+                                <option value="Yozgat">Yozgat</option>
+                                <option value="Zonguldak">Zonguldak</option>
+</select>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Sector / Keyword -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-300 ml-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">search</span>
+                            Sektör / Anahtar Kelime
+                        </label>
+                            <input id="keywordInput" class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="Örn: restoran, kafe, otel..." type="text"/>
+</div>
+<!-- Limit Selection -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-300 ml-1 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">tune</span>
+                            Limit
+                        </label>
+<div class="grid grid-cols-4 gap-2">
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="limit" type="radio" value="10"/>
+<div class="h-12 rounded-xl border border-slate-700/50 bg-slate-900/60 flex items-center justify-center text-sm font-medium text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all shadow-sm">
+                                    10
+                                </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="limit" type="radio" value="20"/>
+<div class="h-12 rounded-xl border border-slate-700/50 bg-slate-900/60 flex items-center justify-center text-sm font-medium text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all shadow-sm">
+                                    20
+                                </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="limit" type="radio" value="30"/>
+<div class="h-12 rounded-xl border border-slate-700/50 bg-slate-900/60 flex items-center justify-center text-sm font-medium text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all shadow-sm">
+                                    30
+                                </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="limit" type="radio" value="50"/>
+<div class="h-12 rounded-xl border border-slate-700/50 bg-slate-900/60 flex items-center justify-center text-sm font-medium text-slate-400 peer-checked:bg-primary peer-checked:text-white peer-checked:border-primary transition-all shadow-sm">
+                                    50
+                                </div>
+</label>
+</div>
+</div>
+<!-- Start Button -->
+                    <button id="startButton" type="button" class="mt-4 w-full h-14 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 active:scale-[0.98] text-white font-bold text-base tracking-wide shadow-lg shadow-primary/25 flex items-center justify-center gap-2 transition-all group">
+<span class="material-symbols-outlined group-hover:animate-pulse">rocket_launch</span>
+                        BAŞLAT
+                    </button>
+</form>
+</div>
+</main>
+<!-- History Section -->
+<section class="px-6 pb-20 w-full">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-white tracking-tight">Son taramalar listesi</h2>
+                <button id="clearAllButton" class="text-xs font-medium text-primary hover:text-blue-400 transition-colors">Tümünü sil</button>
+            </div>
+            <div id="historyList" class="flex flex-col gap-3">
+                <!-- History items will be dynamically inserted here -->
+            </div>
+</section>
+<!-- Example Toast Notification (Hidden by default in logic, visible here for design) -->
+<!-- 
+        <div class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-emerald-500/90 backdrop-blur text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 z-50 animate-bounce">
+            <span class="material-symbols-outlined">check_circle</span>
+            <p class="text-sm font-medium">Tarama başarıyla tamamlandı!</p>
+        </div>
+        -->
+        </div>
+    <script>
+        // localStorage key
+        const STORAGE_KEY = 'scanHistory';
+        
+        // Get icon based on keyword
+        function getIconForKeyword(keyword) {
+            const lowerKeyword = keyword.toLowerCase();
+            if (lowerKeyword.includes('restoran') || lowerKeyword.includes('yemek') || lowerKeyword.includes('lokanta')) {
+                return 'restaurant';
+            } else if (lowerKeyword.includes('kafe') || lowerKeyword.includes('kahve') || lowerKeyword.includes('coffee')) {
+                return 'coffee';
+            } else if (lowerKeyword.includes('otel') || lowerKeyword.includes('hotel')) {
+                return 'hotel';
+            } else if (lowerKeyword.includes('market') || lowerKeyword.includes('mağaza')) {
+                return 'store';
+            } else if (lowerKeyword.includes('eczane') || lowerKeyword.includes('pharmacy')) {
+                return 'local_pharmacy';
+            } else if (lowerKeyword.includes('spor') || lowerKeyword.includes('gym') || lowerKeyword.includes('fitness')) {
+                return 'fitness_center';
+            } else {
+                return 'business';
+            }
+        }
+        
+        // Get color class based on keyword
+        function getColorForKeyword(keyword) {
+            const lowerKeyword = keyword.toLowerCase();
+            if (lowerKeyword.includes('restoran') || lowerKeyword.includes('yemek') || lowerKeyword.includes('lokanta')) {
+                return 'bg-blue-500/10 text-blue-400';
+            } else if (lowerKeyword.includes('kafe') || lowerKeyword.includes('kahve') || lowerKeyword.includes('coffee')) {
+                return 'bg-purple-500/10 text-purple-400';
+            } else if (lowerKeyword.includes('otel') || lowerKeyword.includes('hotel')) {
+                return 'bg-emerald-500/10 text-emerald-400';
+            } else {
+                return 'bg-slate-500/10 text-slate-400';
+            }
+        }
+        
+        // Format date
+        function formatDate(date) {
+            const now = new Date();
+            const diffTime = now - date;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const timeStr = `${hours}:${minutes}`;
+            
+            if (diffDays === 0) {
+                return `Bugün, ${timeStr}`;
+            } else if (diffDays === 1) {
+                return `Dün, ${timeStr}`;
+            } else if (diffDays < 7) {
+                return `${diffDays} gün önce, ${timeStr}`;
+            } else {
+                const day = date.getDate();
+                const month = date.toLocaleDateString('tr-TR', { month: 'short' });
+                return `${day} ${month}, ${timeStr}`;
+            }
+        }
+        
+        // Load history from localStorage
+        function loadHistory() {
+            const historyList = document.getElementById('historyList');
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            
+            historyList.innerHTML = '';
+            
+            if (history.length === 0) {
+                historyList.innerHTML = '<p class="text-slate-400 text-sm text-center py-8">Henüz tarama yapılmadı</p>';
+                return;
+            }
+            
+            // Sort by date (newest first)
+            history.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            history.forEach(item => {
+                const date = new Date(item.date);
+                const icon = getIconForKeyword(item.keyword);
+                const colorClass = getColorForKeyword(item.keyword);
+                
+                const historyItem = document.createElement('div');
+                historyItem.className = 'bg-slate-800/40 border border-slate-700/30 rounded-xl p-4 flex items-center gap-4 hover:bg-slate-800/60 transition-colors cursor-pointer';
+                historyItem.innerHTML = `
+                    <div class="w-10 h-10 rounded-full ${colorClass} flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-[20px]">${icon}</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-white font-semibold text-sm truncate">${item.keyword}</h3>
+                        <p class="text-slate-400 text-xs flex items-center gap-1 mt-0.5">
+                            <span>${item.city}</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-600"></span>
+                            <span>${formatDate(date)}</span>
+                        </p>
+                    </div>
+                    <div class="shrink-0 text-slate-500">
+                        <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                    </div>
+                `;
+                historyList.appendChild(historyItem);
+            });
+        }
+        
+        // Save scan to localStorage
+        function saveScan(keyword, city) {
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            const newScan = {
+                keyword: keyword,
+                city: city,
+                date: new Date().toISOString()
+            };
+            history.push(newScan);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+            loadHistory();
+        }
+        
+        // Clear all history
+        function clearAllHistory() {
+            if (confirm('Tüm tarama geçmişini silmek istediğinize emin misiniz?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                loadHistory();
+            }
+        }
+        
+        // Start button click handler
+        document.getElementById('startButton').addEventListener('click', function() {
+            const keyword = document.getElementById('keywordInput').value.trim();
+            const city = document.getElementById('citySelect').value;
+            
+            if (!keyword) {
+                alert('Lütfen bir anahtar kelime girin.');
+                return;
+            }
+            
+            if (!city) {
+                alert('Lütfen bir şehir seçin.');
+                return;
+            }
+            
+            // Save to localStorage
+            saveScan(keyword, city);
+            
+            // Reset form
+            document.getElementById('keywordInput').value = '';
+            document.getElementById('citySelect').value = '';
+            
+            // Show success message (optional)
+            // You can add a toast notification here if needed
+        });
+        
+        // Clear all button click handler
+        document.getElementById('clearAllButton').addEventListener('click', clearAllHistory);
+        
+        // Load history on page load
+        document.addEventListener('DOMContentLoaded', loadHistory);
+    </script>
+    </body></html>
