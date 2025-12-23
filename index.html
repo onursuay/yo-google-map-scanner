@@ -92,7 +92,7 @@
                             Şehir Seçiniz
                         </label>
 <div class="relative">
-<select class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all cursor-pointer hover:bg-slate-800/60">
+<select id="citySelect" class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all cursor-pointer hover:bg-slate-800/60">
 <option disabled="" selected="" value="">Bir şehir seçin...</option>
 <option value="34">İstanbul</option>
 <option value="06">Ankara</option>
@@ -112,7 +112,7 @@
 <span class="material-symbols-outlined text-[18px] text-primary">search</span>
                             Sektör / Anahtar Kelime
                         </label>
-<input class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="Örn: restoran, kafe, otel..." type="text"/>
+<input id="keywordInput" class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 text-slate-100 placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all" placeholder="Örn: restoran, kafe, otel..." type="text"/>
 </div>
 <!-- Limit Selection -->
 <div class="flex flex-col gap-2">
@@ -148,9 +148,9 @@
 </div>
 </div>
 <!-- Start Button -->
-<button class="mt-4 w-full h-14 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 active:scale-[0.98] text-white font-bold text-base tracking-wide shadow-lg shadow-primary/25 flex items-center justify-center gap-2 transition-all group">
+<button id="startButton" class="mt-4 w-full h-14 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 active:scale-[0.98] text-white font-bold text-base tracking-wide shadow-lg shadow-primary/25 flex items-center justify-center gap-2 transition-all group disabled:opacity-50 disabled:cursor-not-allowed">
 <span class="material-symbols-outlined group-hover:animate-pulse">rocket_launch</span>
-                        BAŞLAT
+                        <span id="buttonText">BAŞLAT</span>
                     </button>
 </form>
 </div>
@@ -215,12 +215,118 @@
 </div>
 </div>
 </section>
-<!-- Example Toast Notification (Hidden by default in logic, visible here for design) -->
-<!-- 
-        <div class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm bg-emerald-500/90 backdrop-blur text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 z-50 animate-bounce">
-            <span class="material-symbols-outlined">check_circle</span>
-            <p class="text-sm font-medium">Tarama başarıyla tamamlandı!</p>
-        </div>
-        -->
+<!-- Toast Notification Container -->
+<div id="toastContainer" class="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] max-w-sm z-50 hidden">
+    <div id="toast" class="backdrop-blur text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3">
+        <span id="toastIcon" class="material-symbols-outlined"></span>
+        <p id="toastMessage" class="text-sm font-medium"></p>
+    </div>
+</div>
+
+<script>
+    // Toast notification function
+    function showToast(message, type = 'success') {
+        const toastContainer = document.getElementById('toastContainer');
+        const toast = document.getElementById('toast');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastMessage = document.getElementById('toastMessage');
+        
+        toastMessage.textContent = message;
+        
+        if (type === 'success') {
+            toast.className = 'backdrop-blur text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 bg-emerald-500/90';
+            toastIcon.textContent = 'check_circle';
+        } else {
+            toast.className = 'backdrop-blur text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 bg-red-500/90';
+            toastIcon.textContent = 'error';
+        }
+        
+        toastContainer.classList.remove('hidden');
+        toastContainer.classList.add('animate-bounce');
+        
+        setTimeout(() => {
+            toastContainer.classList.remove('animate-bounce');
+            setTimeout(() => {
+                toastContainer.classList.add('hidden');
+            }, 300);
+        }, 3000);
+    }
+    
+    // Start button click handler
+    document.getElementById('startButton').addEventListener('click', async function() {
+        const startButton = document.getElementById('startButton');
+        const buttonText = document.getElementById('buttonText');
+        const citySelect = document.getElementById('citySelect');
+        const keywordInput = document.getElementById('keywordInput');
+        
+        // Get form values
+        const city = citySelect.value;
+        const keyword = keywordInput.value.trim();
+        const limitInput = document.querySelector('input[name="limit"]:checked');
+        const limit = limitInput ? limitInput.value : '10';
+        
+        // Validate inputs
+        if (!city) {
+            showToast('Lütfen bir şehir seçin', 'error');
+            return;
+        }
+        
+        if (!keyword) {
+            showToast('Lütfen bir anahtar kelime girin', 'error');
+            return;
+        }
+        
+        // Disable button and show loading state
+        startButton.disabled = true;
+        buttonText.textContent = 'Taranıyor...';
+        
+        try {
+            // Send POST request to webhook
+            const response = await fetch('https://o11122025.app.n8n.cloud/webhook/scanner', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    city,
+                    keyword,
+                    limit
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error('Webhook request failed');
+            }
+            
+            // Success - show green toast
+            showToast('Tarama başlatıldı!', 'success');
+            
+            // Save to localStorage
+            const scanData = {
+                city,
+                keyword,
+                limit,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Get existing scans from localStorage
+            const existingScans = JSON.parse(localStorage.getItem('scans') || '[]');
+            existingScans.unshift(scanData);
+            
+            // Keep only last 50 scans
+            const recentScans = existingScans.slice(0, 50);
+            localStorage.setItem('scans', JSON.stringify(recentScans));
+            
+        } catch (error) {
+            // Error - show red toast
+            showToast('Hata oluştu, tekrar deneyin', 'error');
+            console.error('Webhook error:', error);
+        } finally {
+            // Re-enable button and restore text
+            startButton.disabled = false;
+            buttonText.textContent = 'BAŞLAT';
+        }
+    });
+</script>
 </div>
 </body></html>
