@@ -48,11 +48,37 @@
             border-radius: 3px;
         }
         
-        /* Hide default select arrow */
+        /* Hide default select arrow completely - aggressive approach */
         select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-image: none !important;
+        }
+        
+        select::-ms-expand {
+            display: none !important;
+        }
+        
+        /* Force remove any background images on select - multiple approaches */
+        #citySelect {
+            appearance: none !important;
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            background-image: none !important;
+            background: none !important;
+            background-color: rgb(15 23 42 / 0.6) !important;
+        }
+        
+        /* Override any Tailwind or browser defaults */
+        select.bg-slate-900\/60 {
+            background-image: none !important;
+            background: none !important;
+        }
+        
+        /* Additional Safari/Chrome fix */
+        select:not([multiple]):not([size]) {
+            background-image: none !important;
         }
         
         .glass-card {
@@ -91,8 +117,8 @@
 <span class="material-symbols-outlined text-[18px] text-primary">location_on</span>
                             Şehir Seçiniz
                         </label>
-<div class="relative">
-                            <select id="citySelect" class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 pr-12 text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all cursor-pointer hover:bg-slate-800/60">
+                        <div class="relative overflow-hidden">
+                            <select id="citySelect" class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3.5 pr-12 text-slate-100 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all cursor-pointer hover:bg-slate-800/60" style="background-image: none !important; background: none !important;">
 <option disabled="" selected="" value="">Bir şehir seçin...</option>
                                 <option value="Adana">Adana</option>
                                 <option value="Adıyaman">Adıyaman</option>
@@ -232,13 +258,13 @@
 </main>
 <!-- History Section -->
 <section class="px-6 pb-20 w-full">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold text-white tracking-tight">Son taramalar listesi</h2>
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-lg font-bold text-white tracking-tight">Son taramalar listesi</h2>
                 <button id="clearAllButton" class="text-xs font-medium text-primary hover:text-blue-400 transition-colors">Tümünü sil</button>
-            </div>
+</div>
             <div id="historyList" class="flex flex-col gap-3">
                 <!-- History items will be dynamically inserted here -->
-            </div>
+</div>
 </section>
 <!-- Example Toast Notification (Hidden by default in logic, visible here for design) -->
 <!-- 
@@ -247,7 +273,7 @@
             <p class="text-sm font-medium">Tarama başarıyla tamamlandı!</p>
         </div>
         -->
-        </div>
+</div>
     <script>
         // localStorage key
         const STORAGE_KEY = 'scanHistory';
@@ -404,4 +430,4 @@
         // Load history on page load
         document.addEventListener('DOMContentLoaded', loadHistory);
     </script>
-    </body></html>
+</body></html>
